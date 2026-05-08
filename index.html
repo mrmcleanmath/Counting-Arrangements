@@ -34,6 +34,7 @@
   }
 
   * { box-sizing: border-box; }
+
   body {
     margin: 0;
     font-family: Arial, Helvetica, sans-serif;
@@ -57,10 +58,12 @@
   }
 
   h1, h2, h3, p { margin-top: 0; }
+
   h1 {
     margin-bottom: 8px;
     font-size: 2rem;
   }
+
   .subtitle {
     color: var(--muted);
     margin-bottom: 18px;
@@ -79,14 +82,13 @@
     gap: 12px;
   }
 
-  .control-group label,
-  .control-group .label {
+  .control-group label {
     display: block;
     font-weight: 700;
     margin-bottom: 6px;
   }
 
-  select, input[type="text"], input[type="number"] {
+  select, input[type="number"] {
     width: 100%;
     padding: 11px 12px;
     border: 1px solid var(--border);
@@ -97,7 +99,6 @@
   }
 
   body.high-contrast select,
-  body.high-contrast input[type="text"],
   body.high-contrast input[type="number"] {
     background: #000;
     color: #fff;
@@ -134,21 +135,20 @@
   }
 
   button:hover { background: var(--accent-2); }
+
   button.secondary {
     background: transparent;
     color: var(--text);
     border: 1px solid var(--border);
   }
+
   button.secondary:hover {
     background: rgba(0,0,0,0.04);
   }
+
   body.high-contrast button.secondary:hover {
     background: #222;
   }
-
-  button.good { background: var(--good); }
-  button.bad { background: var(--bad); }
-  button.warn { background: var(--warn); color: white; }
 
   .stats {
     display: grid;
@@ -162,10 +162,12 @@
     padding: 12px;
     text-align: center;
   }
+
   .stat-box .big {
     font-size: 1.5rem;
     font-weight: 700;
   }
+
   .stat-box .small {
     color: var(--muted);
     font-size: 0.92rem;
@@ -183,6 +185,7 @@
     padding: 18px;
     background: rgba(37,99,235,0.04);
   }
+
   body.high-contrast .question-box {
     background: #111;
   }
@@ -211,17 +214,12 @@
     max-width: 220px;
   }
 
-  .choice-buttons {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-
   .feedback {
     min-height: 28px;
     font-weight: 700;
     margin-top: 12px;
   }
+
   .feedback.good { color: var(--good); }
   .feedback.bad { color: var(--bad); }
   .feedback.warn { color: var(--warn); }
@@ -259,6 +257,7 @@
     border: 1px dashed var(--border);
     background: rgba(0,0,0,0.02);
   }
+
   body.high-contrast .worksheet-answer {
     background: #0a0a0a;
   }
@@ -279,21 +278,25 @@
     .top-grid {
       grid-template-columns: 1fr;
     }
+
     .controls-grid {
       grid-template-columns: 1fr;
     }
+
     .stats {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
 </style>
 </head>
+
 <body>
 <div class="app">
   <div class="top-grid">
     <div class="card">
       <h1>Counting Arrangements</h1>
       <div class="subtitle">Created by Mr. McLean Math</div>
+
       <div class="controls-grid">
         <div class="control-group">
           <label for="viewMode">View</label>
@@ -333,12 +336,14 @@
       </div>
 
       <div style="height: 12px;"></div>
+
       <div class="toggle-row">
         <label class="pill"><input type="checkbox" id="soundToggle" checked /> Sound On</label>
         <label class="pill"><input type="checkbox" id="contrastToggle" /> High Contrast</label>
       </div>
 
       <div style="height: 14px;"></div>
+
       <div class="toggle-row">
         <button id="startBtn">Start New Game</button>
         <button id="newQuestionBtn" class="secondary">New Question</button>
@@ -348,25 +353,31 @@
 
     <div class="card">
       <h2 style="font-size: 1.2rem; margin-bottom: 14px;">Game Stats</h2>
+
       <div class="stats">
         <div class="stat-box">
           <div class="big" id="scoreValue">0</div>
           <div class="small">Score</div>
         </div>
+
         <div class="stat-box">
           <div class="big" id="correctValue">0</div>
           <div class="small">Correct</div>
         </div>
+
         <div class="stat-box">
           <div class="big" id="questionValue">0</div>
           <div class="small">Questions</div>
         </div>
+
         <div class="stat-box">
           <div class="big" id="timerValue">--</div>
           <div class="small">Time Left</div>
         </div>
       </div>
+
       <div style="height: 14px;"></div>
+
       <div class="mini-note" id="modeSummary">
         Regular Mode: solve the question directly.
       </div>
@@ -376,34 +387,17 @@
   <div class="workspace">
     <div class="card" id="gamePanel">
       <div class="progress-line" id="progressLine">Question 0</div>
+
       <div class="question-box">
         <p class="question-text" id="questionText">Press Start New Game to begin.</p>
       </div>
 
-      <div id="step1Block">
-        <div class="subprompt">Can a digit or letter be used more than once?</div>
-        <div class="choice-buttons">
-          <button type="button" id="step1Yes">Yes</button>
-          <button type="button" id="step1No" class="secondary">No</button>
-        </div>
-      </div>
+      <div class="subprompt">Enter your answer.</div>
 
-      <div id="step2Block" class="hidden">
-        <div class="subprompt">How many places are there?</div>
-        <div class="answer-row">
-          <input type="number" id="placesInput" min="0" step="1" inputmode="numeric" />
-          <button type="button" id="checkPlacesBtn">Check</button>
-        </div>
-        <div class="feedback" id="step2Feedback"></div>
-      </div>
-
-      <div id="step3Block" class="hidden">
-        <div class="subprompt" id="finalPrompt">How many numbers or arrangements are there?</div>
-        <div class="answer-row">
-          <input type="number" id="finalAnswerInput" min="0" step="1" inputmode="numeric" />
-          <button type="button" id="checkFinalBtn">Check Answer</button>
-          <button type="button" id="nextBtn" class="secondary hidden">Next</button>
-        </div>
+      <div class="answer-row">
+        <input type="number" id="finalAnswerInput" min="0" step="1" inputmode="numeric" />
+        <button type="button" id="checkFinalBtn">Check Answer</button>
+        <button type="button" id="nextBtn" class="secondary hidden">Next</button>
       </div>
 
       <div class="feedback" id="feedback"></div>
@@ -411,13 +405,16 @@
 
     <div class="card hidden" id="worksheetPanel">
       <h2 style="font-size: 1.25rem;">Worksheet Mode</h2>
+
       <div class="mini-note" style="margin-bottom: 14px;">
         Questions are pulled randomly from the approved bank with no repeats inside the worksheet.
       </div>
+
       <div class="worksheet-toolbar">
         <button id="revealAllBtn" class="secondary">Reveal All</button>
         <button id="hideAllBtn" class="secondary">Hide All</button>
       </div>
+
       <div class="worksheet-list" id="worksheetList"></div>
     </div>
   </div>
@@ -430,425 +427,257 @@ const regularBank = [
   {
     id: 'R1',
     text: 'How many two-digit numbers can be formed using the digits 2, 4 and 6 if each digit can be used more than once?',
-    canRepeat: true,
-    places: 2,
-    choices: 3,
     answer: 9,
-    answerText: '9',
-    kind: 'direct'
+    answerText: '9'
   },
   {
     id: 'R2',
     text: 'How many two-digit numbers can be formed using the digits 1, 3 and 5 if each digit can be used more than once?',
-    canRepeat: true,
-    places: 2,
-    choices: 3,
     answer: 9,
-    answerText: '9',
-    kind: 'direct'
+    answerText: '9'
   },
   {
     id: 'R3',
     text: 'How many three-digit numbers can be formed using the digits 2, 4 and 6 if each digit can be used more than once?',
-    canRepeat: true,
-    places: 3,
-    choices: 3,
     answer: 27,
-    answerText: '27',
-    kind: 'direct'
+    answerText: '27'
   },
   {
     id: 'R4',
     text: 'How many three-digit numbers can be formed using the digits 1, 3 and 5 if each digit can be used more than once?',
-    canRepeat: true,
-    places: 3,
-    choices: 3,
     answer: 27,
-    answerText: '27',
-    kind: 'direct'
+    answerText: '27'
   },
   {
     id: 'R5',
     text: 'How many three-digit numbers can be formed using the digits 0, 2 and 7 if each digit can be used more than once?',
-    canRepeat: true,
-    places: 3,
-    choices: 3,
-    answer: 27,
-    answerText: '27',
-    kind: 'direct'
+    answer: 18,
+    answerText: '18. The first digit cannot be 0, so there are 2 choices for the first digit, then 3 choices, then 3 choices.'
   },
   {
     id: 'R6',
     text: 'How many four-digit numbers can be formed using the digits 1, 2 and 3 if each digit can be used more than once?',
-    canRepeat: true,
-    places: 4,
-    choices: 3,
     answer: 81,
-    answerText: '81',
-    kind: 'direct'
+    answerText: '81'
   },
   {
     id: 'R7',
     text: 'How many two-digit numbers can be formed using the digits 3, 5 and 8 if each digit can only be used once?',
-    canRepeat: false,
-    places: 2,
-    choices: [3,2],
     answer: 6,
-    answerText: '6',
-    kind: 'direct'
+    answerText: '6'
   },
   {
     id: 'R8',
     text: 'How many two-digit numbers can be formed using the digits 1, 4 and 7 if each digit can only be used once?',
-    canRepeat: false,
-    places: 2,
-    choices: [3,2],
     answer: 6,
-    answerText: '6',
-    kind: 'direct'
+    answerText: '6'
   },
   {
     id: 'R9',
     text: 'How many three-digit numbers can be formed using the digits 1, 2, 4 and 6 if all digits must be different?',
-    canRepeat: false,
-    places: 3,
-    choices: [4,3,2],
     answer: 24,
-    answerText: '24',
-    kind: 'direct'
+    answerText: '24'
   },
   {
     id: 'R10',
     text: 'How many three-digit numbers can be formed using the digits 2, 3, 5 and 7 if all digits must be different?',
-    canRepeat: false,
-    places: 3,
-    choices: [4,3,2],
     answer: 24,
-    answerText: '24',
-    kind: 'direct'
+    answerText: '24'
   },
   {
     id: 'R11',
     text: 'How many four-digit numbers can be formed using the digits 1, 3, 5 and 7 if all digits must be different?',
-    canRepeat: false,
-    places: 4,
-    choices: [4,3,2,1],
     answer: 24,
-    answerText: '24',
-    kind: 'direct'
+    answerText: '24'
   },
   {
     id: 'R12',
     text: 'How many four-digit numbers can be formed using the digits 2, 4, 6 and 8 if all digits must be different?',
-    canRepeat: false,
-    places: 4,
-    choices: [4,3,2,1],
     answer: 24,
-    answerText: '24',
-    kind: 'direct'
+    answerText: '24'
   },
   {
     id: 'R13',
-    text: 'Which two-digit numbers can be formed using the digits 2, 3 and 7? How many numbers are there?',
-    canRepeat: false,
-    places: 2,
-    choices: [3,2],
+    text: 'How many two-digit numbers can be formed using the digits 2, 3 and 7 if each digit can only be used once?',
     answer: 6,
-    answerText: '23, 27, 32, 37, 72, 73. There are 6 numbers.',
-    kind: 'listing'
+    answerText: '6. The numbers are 23, 27, 32, 37, 72 and 73.'
   },
   {
     id: 'R14',
-    text: 'Which two-digit numbers can be formed using the digits 1, 4 and 5? How many numbers are there?',
-    canRepeat: false,
-    places: 2,
-    choices: [3,2],
+    text: 'How many two-digit numbers can be formed using the digits 1, 4 and 5 if each digit can only be used once?',
     answer: 6,
-    answerText: '14, 15, 41, 45, 51, 54. There are 6 numbers.',
-    kind: 'listing'
+    answerText: '6. The numbers are 14, 15, 41, 45, 51 and 54.'
   },
   {
     id: 'R15',
-    text: 'Which three-digit numbers can be formed using the digits 2, 4 and 6 if each digit can be used more than once? How many numbers are there?',
-    canRepeat: true,
-    places: 3,
-    choices: 3,
+    text: 'How many three-digit numbers can be formed using the digits 2, 4 and 6 if each digit can be used more than once?',
     answer: 27,
-    answerText: 'There are 27 numbers.',
-    kind: 'listing'
+    answerText: '27'
   },
   {
     id: 'R16',
     text: 'Three people are standing in a line. In how many ways can the line be arranged?',
-    canRepeat: false,
-    places: 3,
-    choices: [3,2,1],
     answer: 6,
-    answerText: '6',
-    kind: 'direct'
+    answerText: '6'
   },
   {
     id: 'R17',
     text: 'Four people are standing in a line. In how many ways can the line be arranged?',
-    canRepeat: false,
-    places: 4,
-    choices: [4,3,2,1],
     answer: 24,
-    answerText: '24',
-    kind: 'direct'
+    answerText: '24'
   },
   {
     id: 'R18',
     text: 'Three books are placed on a shelf. In how many different ways can they be arranged?',
-    canRepeat: false,
-    places: 3,
-    choices: [3,2,1],
     answer: 6,
-    answerText: '6',
-    kind: 'direct'
+    answerText: '6'
   },
   {
     id: 'R19',
     text: 'Four books are placed on a shelf. In how many different ways can they be arranged?',
-    canRepeat: false,
-    places: 4,
-    choices: [4,3,2,1],
     answer: 24,
-    answerText: '24',
-    kind: 'direct'
+    answerText: '24'
   },
   {
     id: 'R20',
-    text: 'Using the letters A, B and C, how many three-letter combinations can be formed if all letters must be different?',
-    canRepeat: false,
-    places: 3,
-    choices: [3,2,1],
+    text: 'Using the letters A, B and C, how many three-letter arrangements can be formed if all letters must be different?',
     answer: 6,
-    answerText: '6',
-    kind: 'direct'
+    answerText: '6'
   },
   {
     id: 'R21',
-    text: 'Using the letters A, B and C, how many three-letter combinations can be formed if letters can be repeated?',
-    canRepeat: true,
-    places: 3,
-    choices: 3,
+    text: 'Using the letters A, B and C, how many three-letter arrangements can be formed if letters can be repeated?',
     answer: 27,
-    answerText: '27',
-    kind: 'direct'
+    answerText: '27'
   },
   {
     id: 'R22',
-    text: 'Using the letters A, B, C and D, how many four-letter combinations can be formed if all letters must be different?',
-    canRepeat: false,
-    places: 4,
-    choices: [4,3,2,1],
+    text: 'Using the letters A, B, C and D, how many four-letter arrangements can be formed if all letters must be different?',
     answer: 24,
-    answerText: '24',
-    kind: 'direct'
+    answerText: '24'
   },
   {
     id: 'R23',
-    text: 'Using the letters A, B, C and D, how many four-letter combinations can be formed if letters can be repeated?',
-    canRepeat: true,
-    places: 4,
-    choices: 4,
+    text: 'Using the letters A, B, C and D, how many four-letter arrangements can be formed if letters can be repeated?',
     answer: 256,
-    answerText: '256',
-    kind: 'direct'
+    answerText: '256'
   },
   {
     id: 'R24',
     text: 'You can choose between 3 shirts and 2 pairs of pants. In how many ways can you choose one shirt and one pair of pants?',
-    canRepeat: false,
-    places: 2,
-    choices: [3,2],
     answer: 6,
-    answerText: '6',
-    kind: 'product'
+    answerText: '6'
   },
   {
     id: 'R25',
     text: 'You can choose between 4 hats and 3 jackets. In how many ways can you choose one hat and one jacket?',
-    canRepeat: false,
-    places: 2,
-    choices: [4,3],
     answer: 12,
-    answerText: '12',
-    kind: 'product'
+    answerText: '12'
   }
 ];
 
 const advancedBank = [
   {
     id: 'A1',
-    text: 'How many two-digit numbers can be formed using the digits 1, 2 and 4 if each digit can be used more than once and the number must be even?',
-    canRepeat: true,
-    places: 2,
-    choices: 3,
+    text: 'How many two-digit even numbers can be formed using the digits 1, 2 and 4 if each digit can be used more than once?',
     answer: 6,
-    answerText: '6',
-    kind: 'condition'
+    answerText: '6'
   },
   {
     id: 'A2',
-    text: 'How many two-digit numbers can be formed using the digits 1, 3 and 5 if each digit can be used more than once and the number must be odd?',
-    canRepeat: true,
-    places: 2,
-    choices: 3,
+    text: 'How many two-digit odd numbers can be formed using the digits 1, 3 and 5 if each digit can be used more than once?',
     answer: 9,
-    answerText: '9',
-    kind: 'condition'
+    answerText: '9'
   },
   {
     id: 'A3',
-    text: 'How many three-digit numbers can be formed using the digits 1, 3, 5 and 6 if all digits must be different and the number must be odd?',
-    canRepeat: false,
-    places: 3,
-    choices: [4,3,2],
+    text: 'How many three-digit odd numbers can be formed using the digits 1, 3, 5 and 6 if all digits must be different?',
     answer: 18,
-    answerText: '18',
-    kind: 'condition'
+    answerText: '18'
   },
   {
     id: 'A4',
     text: 'How many three-digit numbers can be formed using the digits 2, 4 and 6 if each digit can be used more than once and the number must start with 2?',
-    canRepeat: true,
-    places: 3,
-    choices: 3,
     answer: 9,
-    answerText: '9',
-    kind: 'condition'
+    answerText: '9'
   },
   {
     id: 'A5',
     text: 'How many three-digit numbers can be formed using the digits 1, 3 and 5 if each digit can be used more than once and the number must start with 1?',
-    canRepeat: true,
-    places: 3,
-    choices: 3,
     answer: 9,
-    answerText: '9',
-    kind: 'condition'
+    answerText: '9'
   },
   {
     id: 'A6',
     text: 'How many four-digit numbers can be formed using the digits 1, 3, 5 and 7 if all digits must be different and the number must end with 5?',
-    canRepeat: false,
-    places: 4,
-    choices: [4,3,2,1],
     answer: 6,
-    answerText: '6',
-    kind: 'condition'
+    answerText: '6'
   },
   {
     id: 'A7',
     text: 'How many two-digit numbers can be formed using the digits 1, 2 and 3 if each digit can be used more than once, but the numbers 11, 22 and 33 are not allowed?',
-    canRepeat: true,
-    places: 2,
-    choices: 3,
     answer: 6,
-    answerText: '6',
-    kind: 'condition'
+    answerText: '6'
   },
   {
     id: 'A8',
     text: 'How many two-digit numbers can be formed using the digits 2, 4 and 6 if repeating digits is not allowed?',
-    canRepeat: false,
-    places: 2,
-    choices: 3,
     answer: 6,
-    answerText: '6',
-    kind: 'condition'
+    answerText: '6'
   },
   {
     id: 'A9',
-    text: 'How many three-digit numbers can be formed using the digits 1, 2 and 3 if each digit can be used more than once? How many of these numbers are even?',
-    canRepeat: true,
-    places: 3,
-    choices: 3,
+    text: 'How many even three-digit numbers can be formed using the digits 1, 2 and 3 if each digit can be used more than once?',
     answer: 9,
-    answerText: '9',
-    kind: 'condition'
+    answerText: '9'
   },
   {
     id: 'A10',
-    text: 'How many two-digit numbers can be formed using the digits 2, 4 and 6? How many of these numbers are odd?',
-    canRepeat: false,
-    places: 2,
-    choices: [3,2],
+    text: 'How many two-digit odd numbers can be formed using the digits 2, 4 and 6 if each digit can only be used once?',
     answer: 0,
-    answerText: '0',
-    kind: 'condition'
+    answerText: '0'
   },
   {
     id: 'A11',
     text: 'Four people are standing in a line. In how many ways can the line be arranged if one specific person must stand first?',
-    canRepeat: false,
-    places: 4,
-    choices: [4,3,2,1],
     answer: 6,
-    answerText: '6',
-    kind: 'condition'
+    answerText: '6'
   },
   {
     id: 'A12',
-    text: 'Three people are standing in a line. In how many ways can the line be arranged if two of them must stand next to each other?',
-    canRepeat: false,
-    places: 3,
-    choices: [3,2,1],
+    text: 'Three people are standing in a line. In how many ways can the line be arranged if two specific people must stand next to each other?',
     answer: 4,
-    answerText: '4',
-    kind: 'condition'
+    answerText: '4'
   },
   {
     id: 'A13',
-    text: 'Using the letters A, B and C, how many three-letter combinations can be formed if letters can be repeated and the combination must start with A?',
-    canRepeat: true,
-    places: 3,
-    choices: 3,
+    text: 'Using the letters A, B and C, how many three-letter arrangements can be formed if letters can be repeated and the arrangement must start with A?',
     answer: 9,
-    answerText: '9',
-    kind: 'condition'
+    answerText: '9'
   },
   {
     id: 'A14',
-    text: 'Using the letters A, B, C and D, how many four-letter combinations can be formed if all letters must be different and the combination must end with D?',
-    canRepeat: false,
-    places: 4,
-    choices: [4,3,2,1],
+    text: 'Using the letters A, B, C and D, how many four-letter arrangements can be formed if all letters must be different and the arrangement must end with D?',
     answer: 6,
-    answerText: '6',
-    kind: 'condition'
+    answerText: '6'
   },
   {
     id: 'A15',
-    text: 'A code consists of two letters (A or B) followed by three digits. How many different codes can be formed?',
-    canRepeat: true,
-    places: 5,
-    choices: null,
-    answer: 800,
-    answerText: '800',
-    kind: 'product'
+    text: 'A code consists of two letters, A or B, followed by three digits. How many different codes can be formed?',
+    answer: 400,
+    answerText: '400'
   },
   {
     id: 'A16',
-    text: 'A code consists of one letter (A, B or C) followed by three digits. How many different codes can be formed if digits can be repeated?',
-    canRepeat: true,
-    places: 4,
-    choices: null,
+    text: 'A code consists of one letter, A, B or C, followed by three digits. How many different codes can be formed if digits can be repeated?',
     answer: 3000,
-    answerText: '3000',
-    kind: 'product'
+    answerText: '3000'
   },
   {
     id: 'A17',
-    text: 'A code consists of two letters (A, B or C) followed by two digits. How many different codes can be formed?',
-    canRepeat: true,
-    places: 4,
-    choices: null,
+    text: 'A code consists of two letters, A, B or C, followed by two digits. How many different codes can be formed?',
     answer: 900,
-    answerText: '900',
-    kind: 'product'
+    answerText: '900'
   }
 ];
 
@@ -860,8 +689,6 @@ const state = {
   score: 0,
   correct: 0,
   awaitingNext: false,
-  step1Done: false,
-  step2Done: false,
   timerSeconds: 0,
   timerLeft: 0,
   timerId: null,
@@ -890,15 +717,6 @@ const els = {
   worksheetPanel: document.getElementById('worksheetPanel'),
   progressLine: document.getElementById('progressLine'),
   questionText: document.getElementById('questionText'),
-  step1Block: document.getElementById('step1Block'),
-  step1Yes: document.getElementById('step1Yes'),
-  step1No: document.getElementById('step1No'),
-  step2Block: document.getElementById('step2Block'),
-  placesInput: document.getElementById('placesInput'),
-  checkPlacesBtn: document.getElementById('checkPlacesBtn'),
-  step2Feedback: document.getElementById('step2Feedback'),
-  step3Block: document.getElementById('step3Block'),
-  finalPrompt: document.getElementById('finalPrompt'),
   finalAnswerInput: document.getElementById('finalAnswerInput'),
   checkFinalBtn: document.getElementById('checkFinalBtn'),
   nextBtn: document.getElementById('nextBtn'),
@@ -910,10 +728,14 @@ const els = {
 
 function shuffle(array) {
   const arr = [...array];
+
   for (let i = arr.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
+    const temp = arr[i];
+    arr[i] = arr[j];
+    arr[j] = temp;
   }
+
   return arr;
 }
 
@@ -924,9 +746,11 @@ function resetPools() {
 
 function getNextQuestion(mode) {
   const poolName = mode === 'regular' ? 'regularPool' : 'advancedPool';
+
   if (state[poolName].length === 0) {
     state[poolName] = shuffle(mode === 'regular' ? regularBank : advancedBank);
   }
+
   return state[poolName].pop();
 }
 
@@ -939,17 +763,15 @@ function updateStats() {
 
 function updateModeSummary() {
   if (state.currentMode === 'regular') {
-    els.modeSummary.textContent = 'Regular Mode: solve the question directly.';
+    els.modeSummary.textContent = 'Regular Mode: direct counting questions.';
   } else {
-    els.modeSummary.textContent = 'Advanced Mode: solve the question directly.';
+    els.modeSummary.textContent = 'Advanced Mode: counting questions with extra conditions.';
   }
 }
 
 function clearFeedback() {
   els.feedback.textContent = '';
   els.feedback.className = 'feedback';
-  els.step2Feedback.textContent = '';
-  els.step2Feedback.className = 'feedback';
 }
 
 function setFeedback(message, type) {
@@ -957,40 +779,47 @@ function setFeedback(message, type) {
   els.feedback.className = 'feedback ' + type;
 }
 
-function setStep2Feedback(message, type) {
-  els.step2Feedback.textContent = message;
-  els.step2Feedback.className = 'feedback ' + type;
-}
-
 function playTone(type) {
   if (!els.soundToggle.checked) return;
+
   const AudioCtx = window.AudioContext || window.webkitAudioContext;
   if (!AudioCtx) return;
+
   const ctx = new AudioCtx();
   const osc = ctx.createOscillator();
   const gain = ctx.createGain();
+
   osc.connect(gain);
   gain.connect(ctx.destination);
+
   osc.type = 'sine';
   osc.frequency.value = type === 'good' ? 660 : 220;
+
   gain.gain.setValueAtTime(0.001, ctx.currentTime);
   gain.gain.exponentialRampToValueAtTime(0.12, ctx.currentTime + 0.01);
   gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.25);
+
   osc.start();
   osc.stop(ctx.currentTime + 0.26);
 }
 
 function startTimer() {
   stopTimer();
+
   state.timerSeconds = Number(els.timerMode.value);
   state.timerLeft = state.timerSeconds;
+
   updateStats();
+
   if (state.timerSeconds <= 0) return;
+
   state.timerId = setInterval(() => {
     state.timerLeft -= 1;
     updateStats();
+
     if (state.timerLeft <= 0) {
       stopTimer();
+
       if (!state.awaitingNext && state.currentQuestion) {
         finalizeIncorrect('Time is up. The correct answer is: ' + state.currentQuestion.answerText);
       }
@@ -1009,31 +838,33 @@ function setupQuestion() {
   state.currentQuestion = getNextQuestion(state.currentMode);
   state.questionNumber += 1;
   state.awaitingNext = false;
-  state.step1Done = true;
-  state.step2Done = true;
+
   clearFeedback();
 
   els.questionText.textContent = state.currentQuestion.text;
   els.progressLine.textContent = 'Question ' + state.questionNumber;
-  els.step1Block.classList.add('hidden');
-  els.step2Block.classList.add('hidden');
-  els.step3Block.classList.remove('hidden');
   els.nextBtn.classList.add('hidden');
-  els.placesInput.value = '';
   els.finalAnswerInput.value = '';
-  els.finalPrompt.textContent = 'Enter your answer.';
+
   updateStats();
   startTimer();
-  els.finalAnswerInput.focus();
+
+  setTimeout(() => {
+    els.finalAnswerInput.focus();
+  }, 50);
 }
 
 function startNewGame() {
   state.currentMode = els.difficultyMode.value;
   state.currentView = 'game';
+
   els.viewMode.value = 'game';
+
   state.score = 0;
   state.correct = 0;
   state.questionNumber = 0;
+
+  resetPools();
   updateModeSummary();
   showView();
   setupQuestion();
@@ -1041,84 +872,36 @@ function startNewGame() {
 
 function showView() {
   const game = els.viewMode.value === 'game';
+
   state.currentView = els.viewMode.value;
+
   els.gamePanel.classList.toggle('hidden', !game);
   els.worksheetPanel.classList.toggle('hidden', game);
   els.worksheetCountWrap.classList.toggle('hidden', game);
 }
 
-function handleStep1(userAnswer) {
-  if (state.awaitingNext || !state.currentQuestion || state.step1Done) return;
-  const correct = userAnswer === state.currentQuestion.canRepeat;
-  if (correct) {
-    state.step1Done = true;
-    playTone('good');
-    setFeedback(
-      state.currentQuestion.canRepeat ?
-      'Correct. A digit or letter can be used more than once.' :
-      'Correct. A digit or letter cannot be used more than once.',
-      'good'
-    );
-    if (state.currentMode === 'advanced') {
-      els.step2Block.classList.remove('hidden');
-      els.placesInput.focus();
-    } else {
-      els.step3Block.classList.remove('hidden');
-      els.finalAnswerInput.focus();
-    }
-  } else {
-    playTone('bad');
-    finalizeIncorrect(
-      state.currentQuestion.canRepeat ?
-      'Incorrect. In this question, a digit or letter can be used more than once. The correct answer is: ' + state.currentQuestion.answerText :
-      'Incorrect. In this question, a digit or letter cannot be used more than once. The correct answer is: ' + state.currentQuestion.answerText
-    );
-  }
-}
-
-function handlePlacesCheck() {
-  if (state.awaitingNext || !state.currentQuestion || !state.step1Done || state.step2Done) return;
-  const val = Number(els.placesInput.value);
-  if (!Number.isInteger(val)) {
-    setStep2Feedback('Enter a whole number.', 'warn');
-    return;
-  }
-  if (val === state.currentQuestion.places) {
-    state.step2Done = true;
-    playTone('good');
-    const choiceText = getChoiceText(state.currentQuestion);
-    setStep2Feedback('Correct. There are ' + state.currentQuestion.places + ' places. ' + choiceText, 'good');
-    els.step3Block.classList.remove('hidden');
-    els.finalAnswerInput.focus();
-  } else {
-    playTone('bad');
-    finalizeIncorrect('Incorrect. There are ' + state.currentQuestion.places + ' places. The correct answer is: ' + state.currentQuestion.answerText);
-  }
-}
-
-function getChoiceText(q) {
-  if (q.id === 'A15') return 'The choices are 2 for the first letter, 2 for the second letter, and 10 for each digit.';
-  if (q.id === 'A16') return 'The choices are 3 for the letter and 10 for each digit.';
-  if (q.id === 'A17') return 'The choices are 3 for the first letter, 3 for the second letter, and 10 for each digit.';
-  if (Array.isArray(q.choices)) return 'The choices for each place are ' + q.choices.join(', ') + '.';
-  return 'There are ' + q.choices + ' choices for each place.';
-}
-
 function handleFinalCheck() {
   if (state.awaitingNext || !state.currentQuestion) return;
+
   const val = Number(els.finalAnswerInput.value);
+
   if (!Number.isInteger(val)) {
     setFeedback('Enter a whole number.', 'warn');
     return;
   }
+
   if (val === state.currentQuestion.answer) {
     state.score += 1;
     state.correct += 1;
+
     playTone('good');
     stopTimer();
+
     state.awaitingNext = true;
+
     setFeedback('Correct!', 'good');
     els.nextBtn.classList.remove('hidden');
+
     updateStats();
   } else {
     playTone('bad');
@@ -1128,9 +911,12 @@ function handleFinalCheck() {
 
 function finalizeIncorrect(message) {
   stopTimer();
+
   state.awaitingNext = true;
+
   setFeedback(message, 'bad');
   els.nextBtn.classList.remove('hidden');
+
   updateStats();
 }
 
@@ -1141,17 +927,22 @@ function nextQuestion() {
 function uniqueWorksheetQuestions(mode, count) {
   const bank = shuffle(mode === 'regular' ? regularBank : advancedBank);
   const amount = Math.min(count, bank.length);
+
   return bank.slice(0, amount);
 }
 
 function buildWorksheet() {
   state.currentMode = els.difficultyMode.value;
   state.currentView = 'worksheet';
+
   els.viewMode.value = 'worksheet';
+
   updateModeSummary();
   showView();
+  stopTimer();
 
   const count = Number(els.worksheetCount.value);
+
   state.worksheetItems = uniqueWorksheetQuestions(state.currentMode, count);
   els.worksheetList.innerHTML = '';
 
@@ -1185,9 +976,11 @@ function buildWorksheet() {
     });
 
     btnRow.appendChild(revealBtn);
+
     item.appendChild(title);
     item.appendChild(btnRow);
     item.appendChild(answer);
+
     els.worksheetList.appendChild(item);
   });
 }
@@ -1195,43 +988,60 @@ function buildWorksheet() {
 function revealAll(show) {
   const answers = els.worksheetList.querySelectorAll('.worksheet-answer');
   const buttons = els.worksheetList.querySelectorAll('.worksheet-item button');
+
   answers.forEach(el => el.classList.toggle('hidden', !show));
   buttons.forEach(btn => btn.textContent = show ? 'Hide Answer' : 'Reveal Answer');
 }
 
 els.startBtn.addEventListener('click', startNewGame);
+
 els.newQuestionBtn.addEventListener('click', () => {
   if (els.viewMode.value !== 'game') {
     els.viewMode.value = 'game';
     showView();
   }
+
   state.currentMode = els.difficultyMode.value;
+
   updateModeSummary();
   setupQuestion();
 });
+
 els.buildWorksheetBtn.addEventListener('click', buildWorksheet);
-els.viewMode.addEventListener('change', showView);
+
+els.viewMode.addEventListener('change', () => {
+  showView();
+  if (els.viewMode.value === 'worksheet') {
+    stopTimer();
+  }
+});
+
 els.difficultyMode.addEventListener('change', () => {
   state.currentMode = els.difficultyMode.value;
   updateModeSummary();
 });
+
 els.contrastToggle.addEventListener('change', () => {
   document.body.classList.toggle('high-contrast', els.contrastToggle.checked);
 });
+
 els.checkFinalBtn.addEventListener('click', handleFinalCheck);
+
 els.nextBtn.addEventListener('click', nextQuestion);
+
 els.revealAllBtn.addEventListener('click', () => revealAll(true));
+
 els.hideAllBtn.addEventListener('click', () => revealAll(false));
 
-els.placesInput.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') handlePlacesCheck();
-});
 els.finalAnswerInput.addEventListener('keydown', (e) => {
   if (e.key === 'Enter') {
     e.preventDefault();
-    e.stopPropagation();
-    if (state.awaitingNext) nextQuestion();
-    else handleFinalCheck();
+
+    if (state.awaitingNext) {
+      nextQuestion();
+    } else {
+      handleFinalCheck();
+    }
   }
 });
 
