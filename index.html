@@ -1,1173 +1,603 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Counting Arrangements - Mr. McLean Math</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Counting Arrangements — Mr. McLean Math</title>
 <style>
-  :root {
-    --bg: #f4f7fb;
-    --panel: #ffffff;
-    --text: #1b2430;
-    --muted: #5d6b7a;
-    --border: #d8e0ea;
-    --accent: #2563eb;
-    --accent-2: #1d4ed8;
-    --good: #157347;
-    --bad: #b42318;
-    --warn: #8a5b00;
-    --shadow: 0 10px 26px rgba(0,0,0,0.08);
-  }
-
-  body.high-contrast {
-    --bg: #000000;
-    --panel: #111111;
-    --text: #ffffff;
-    --muted: #dddddd;
-    --border: #ffffff;
-    --accent: #ffff00;
-    --accent-2: #ffcc00;
-    --good: #7CFC00;
-    --bad: #ff6b6b;
-    --warn: #ffd166;
-    --shadow: none;
-  }
-
-  * { box-sizing: border-box; }
-
-  body {
-    margin: 0;
-    font-family: Arial, Helvetica, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    line-height: 1.5;
-  }
-
-  .app {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 18px;
-  }
-
-  .card {
-    background: var(--panel);
-    border: 1px solid var(--border);
-    border-radius: 18px;
-    box-shadow: var(--shadow);
-    padding: 18px;
-  }
-
-  h1, h2, h3, p { margin-top: 0; }
-
-  h1 {
-    margin-bottom: 8px;
-    font-size: 2rem;
-  }
-
-  .subtitle {
-    color: var(--muted);
-    margin-bottom: 18px;
-  }
-
-  .top-grid {
-    display: grid;
-    grid-template-columns: 1.15fr 0.85fr;
-    gap: 16px;
-    margin-bottom: 16px;
-  }
-
-  .controls-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 12px;
-  }
-
-  .control-group label {
-    display: block;
-    font-weight: 700;
-    margin-bottom: 6px;
-  }
-
-  select, input[type="number"] {
-    width: 100%;
-    padding: 11px 12px;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    background: #fff;
-    color: #111;
-    font-size: 1rem;
-  }
-
-  body.high-contrast select,
-  body.high-contrast input[type="number"] {
-    background: #000;
-    color: #fff;
-    border-color: #fff;
-  }
-
-  .toggle-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    align-items: center;
-  }
-
-  .pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 12px;
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    background: var(--panel);
-    font-size: 0.95rem;
-  }
-
-  button {
-    border: 0;
-    border-radius: 12px;
-    padding: 11px 16px;
-    font-size: 1rem;
-    font-weight: 700;
-    cursor: pointer;
-    background: var(--accent);
-    color: white;
-  }
-
-  button:hover { background: var(--accent-2); }
-
-  button.secondary {
-    background: transparent;
-    color: var(--text);
-    border: 1px solid var(--border);
-  }
-
-  button.secondary:hover {
-    background: rgba(0,0,0,0.04);
-  }
-
-  body.high-contrast button.secondary:hover {
-    background: #222;
-  }
-
-  .stats {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 10px;
-  }
-
-  .stat-box {
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 12px;
-    text-align: center;
-  }
-
-  .stat-box .big {
-    font-size: 1.5rem;
-    font-weight: 700;
-  }
-
-  .stat-box .small {
-    color: var(--muted);
-    font-size: 0.92rem;
-  }
-
-  .workspace {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 16px;
-  }
-
-  .question-box {
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 18px;
-    background: rgba(37,99,235,0.04);
-  }
-
-  body.high-contrast .question-box {
-    background: #111;
-  }
-
-  .question-text {
-    font-size: 1.2rem;
-    font-weight: 700;
-    margin: 0;
-  }
-
-  .subprompt {
-    margin-top: 16px;
-    margin-bottom: 10px;
-    font-size: 1.05rem;
-    font-weight: 700;
-  }
-
-  .answer-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    align-items: center;
-  }
-
-  .answer-row input {
-    max-width: 220px;
-  }
-
-  .feedback {
-    min-height: 28px;
-    font-weight: 700;
-    margin-top: 12px;
-  }
-
-  .feedback.good { color: var(--good); }
-  .feedback.bad { color: var(--bad); }
-  .feedback.warn { color: var(--warn); }
-
-  .progress-line {
-    color: var(--muted);
-    margin-bottom: 10px;
-    font-weight: 700;
-  }
-
-  .hidden { display: none !important; }
-
-  .worksheet-toolbar {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 16px;
-  }
-
-  .worksheet-list {
-    display: grid;
-    gap: 14px;
-  }
-
-  .worksheet-item {
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 16px;
-  }
-
-  .worksheet-answer {
-    margin-top: 12px;
-    padding: 12px;
-    border-radius: 12px;
-    border: 1px dashed var(--border);
-    background: rgba(0,0,0,0.02);
-  }
-
-  body.high-contrast .worksheet-answer {
-    background: #0a0a0a;
-  }
-
-  .mini-note {
-    color: var(--muted);
-    font-size: 0.95rem;
-  }
-
-  .footer {
-    text-align: center;
-    margin-top: 18px;
-    color: var(--muted);
-    font-size: 0.95rem;
-  }
-
-  @media (max-width: 860px) {
-    .top-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .controls-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .stats {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-  }
+:root{
+  --bg:#f5f6f8;--panel:#fff;--text:#202124;--muted:#666b73;--border:#d9dde3;
+  --accent:#1976d2;--accent-soft:#e8f1fb;--good:#247a3b;--bad:#b3261e;--focus:#f5b400;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.45}
+body.high-contrast{
+  --bg:#000;--panel:#090909;--text:#fff;--muted:#ddd;--border:#777;
+  --accent:#00d7ff;--accent-soft:#111;--good:#68ff8b;--bad:#ff7474;--focus:#ffea00;
+}
+.app{max-width:900px;margin:0 auto;padding:18px}
+header{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+h1{margin:0;font-size:clamp(28px,5vw,36px)}
+.mode-buttons,.toolbar,.math-modes,.ws-controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.toolbar{justify-content:space-between;margin-bottom:14px}
+button,select,input{font:inherit}
+button,select{border:1px solid var(--border);border-radius:10px;background:var(--panel);color:var(--text);padding:9px 13px}
+button{cursor:pointer;font-weight:650}
+button:hover{border-color:var(--accent)}
+button:focus-visible,input:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+button[aria-pressed="true"],button.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:18px}
+.practice{display:grid;gap:15px}
+.question{font-size:clamp(21px,4vw,29px);font-weight:750;line-height:1.45;padding:18px;background:var(--accent-soft);border-radius:13px}
+.note{text-align:center;color:var(--muted);font-size:14px}
+.answer-row{display:flex;justify-content:center;gap:8px;align-items:center;flex-wrap:wrap}
+input[type="text"]{width:min(280px,100%);font-size:21px;text-align:center;padding:10px 11px;border:1px solid var(--border);border-radius:9px;background:var(--panel);color:var(--text)}
+.feedback{min-height:28px;text-align:center;font-size:18px;font-weight:700}
+.feedback.correct{color:var(--good)}.feedback.incorrect{color:var(--bad)}.feedback.warn{color:var(--muted)}
+.solution{max-width:680px;width:100%;margin:0 auto;background:var(--accent-soft);border:1px solid var(--border);border-radius:11px;padding:11px 13px}
+.stats{display:flex;justify-content:center;gap:20px;color:var(--muted);font-size:15px}
+.worksheet{display:none}
+.ws-controls{margin-bottom:14px}
+.ws-list{display:grid;gap:12px}
+.ws-item{border:1px solid var(--border);border-radius:11px;padding:12px;break-inside:avoid}
+.ws-q{font-size:17px;line-height:1.5}
+.ws-answer{display:none;margin-top:8px;color:var(--good);font-weight:700}
+.ws-work{display:none;margin-top:7px;background:var(--accent-soft);padding:9px;border-radius:9px}
+.ws-reveal{margin-top:8px;padding:6px 10px;font-size:14px}
+footer{text-align:center;color:var(--muted);font-size:14px;margin-top:18px}
+@media(max-width:620px){.app{padding:13px}.panel{padding:14px}.answer-row{align-items:stretch}input[type="text"],.answer-row button{width:100%}}
+@media print{
+  header,.toolbar,footer,.ws-controls,.ws-reveal{display:none!important}
+  body{background:#fff;color:#000}.app{max-width:none;padding:0}.panel{border:0;padding:0;background:#fff}
+  .worksheet{display:block!important}.ws-answer,.ws-work{display:none!important}
+}
 </style>
 </head>
-
 <body>
 <div class="app">
-  <div class="top-grid">
-    <div class="card">
-      <h1>Counting Arrangements</h1>
-      <div class="subtitle">Created by Mr. McLean Math</div>
+<header>
+  <h1>Counting Arrangements</h1>
+  <div class="mode-buttons" role="group" aria-label="View">
+    <button id="practiceBtn" aria-pressed="true">Practice</button>
+    <button id="worksheetBtn" aria-pressed="false">Worksheet</button>
+  </div>
+</header>
 
-      <div class="controls-grid">
-        <div class="control-group">
-          <label for="viewMode">View</label>
-          <select id="viewMode">
-            <option value="game">Game Mode</option>
-            <option value="worksheet">Worksheet Mode</option>
-          </select>
-        </div>
+<div class="toolbar">
+  <div class="math-modes" id="mathModes" role="group" aria-label="Mode">
+    <button data-mode="regular" aria-pressed="true">Regular</button>
+    <button data-mode="advanced" aria-pressed="false">Advanced</button>
+  </div>
+  <button id="contrastBtn" aria-pressed="false">High contrast</button>
+</div>
 
-        <div class="control-group">
-          <label for="difficultyMode">Mode</label>
-          <select id="difficultyMode">
-            <option value="regular">Regular</option>
-            <option value="advanced">Advanced</option>
-          </select>
-        </div>
-
-        <div class="control-group">
-          <label for="timerMode">Timer</label>
-          <select id="timerMode">
-            <option value="0">Off</option>
-            <option value="30">30 seconds</option>
-            <option value="60">60 seconds</option>
-            <option value="90">90 seconds</option>
-            <option value="120">120 seconds</option>
-          </select>
-        </div>
-
-        <div class="control-group" id="worksheetCountWrap">
-          <label for="worksheetCount">Worksheet Size</label>
-          <select id="worksheetCount">
-            <option value="5">5 questions</option>
-            <option value="10">10 questions</option>
-            <option value="15">15 questions</option>
-          </select>
-        </div>
-      </div>
-
-      <div style="height: 12px;"></div>
-
-      <div class="toggle-row">
-        <label class="pill"><input type="checkbox" id="soundToggle" checked /> Sound On</label>
-        <label class="pill"><input type="checkbox" id="contrastToggle" /> High Contrast</label>
-      </div>
-
-      <div style="height: 14px;"></div>
-
-      <div class="toggle-row">
-        <button id="startBtn">Start New Game</button>
-        <button id="newQuestionBtn" class="secondary">New Question</button>
-        <button id="buildWorksheetBtn" class="secondary">Build Worksheet</button>
-      </div>
-    </div>
-
-    <div class="card">
-      <h2 style="font-size: 1.2rem; margin-bottom: 14px;">Game Stats</h2>
-
-      <div class="stats">
-        <div class="stat-box">
-          <div class="big" id="scoreValue">0</div>
-          <div class="small">Score</div>
-        </div>
-
-        <div class="stat-box">
-          <div class="big" id="correctValue">0</div>
-          <div class="small">Correct</div>
-        </div>
-
-        <div class="stat-box">
-          <div class="big" id="questionValue">0</div>
-          <div class="small">Questions</div>
-        </div>
-
-        <div class="stat-box">
-          <div class="big" id="timerValue">--</div>
-          <div class="small">Time Left</div>
-        </div>
-      </div>
-
-      <div style="height: 14px;"></div>
-
-      <div class="mini-note" id="modeSummary">
-        Regular Mode: solve the question directly.
-      </div>
-    </div>
+<section id="practice" class="panel practice">
+  <div id="question" class="question" aria-live="polite"></div>
+  <div class="answer-row">
+    <input id="answer" type="text" inputmode="numeric" autocomplete="off" placeholder="Whole-number answer" aria-label="Your answer">
+    <button id="check" class="primary">Check</button>
+    <button id="next" hidden>Next</button>
   </div>
 
-  <div class="workspace">
-    <div class="card" id="gamePanel">
-      <div class="progress-line" id="progressLine">Question 0</div>
+  <div id="feedback" class="feedback" aria-live="polite"></div>
+  <button id="showSolution" hidden style="justify-self:center">Show solution</button>
+  <div id="solution" class="solution" hidden></div>
 
-      <div class="question-box">
-        <p class="question-text" id="questionText">Press Start New Game to begin.</p>
-      </div>
-
-      <div class="subprompt">Enter your answer.</div>
-
-      <div class="answer-row">
-        <input type="text" id="finalAnswerInput" inputmode="numeric" pattern="[0-9]*" autocomplete="off" />
-        <button type="button" id="checkFinalBtn">Check Answer</button>
-        <button type="button" id="nextBtn" class="secondary hidden">Next</button>
-      </div>
-
-      <div class="feedback" id="feedback"></div>
-    </div>
-
-    <div class="card hidden" id="worksheetPanel">
-      <h2 style="font-size: 1.25rem;">Worksheet Mode</h2>
-
-      <div class="mini-note" style="margin-bottom: 14px;">
-        Questions are pulled randomly from the approved bank with no repeats inside the worksheet.
-      </div>
-
-      <div class="worksheet-toolbar">
-        <button id="revealAllBtn" class="secondary">Reveal All</button>
-        <button id="hideAllBtn" class="secondary">Hide All</button>
-      </div>
-
-      <div class="worksheet-list" id="worksheetList"></div>
-    </div>
+  <div class="stats">
+    <span>Correct: <strong id="correctCount">0</strong></span>
+    <span>Incorrect: <strong id="incorrectCount">0</strong></span>
   </div>
+</section>
 
-  <div class="footer">Built for structured practice with and without repetition.</div>
+<section id="worksheet" class="panel worksheet">
+  <div class="ws-controls">
+    <label for="wsCount">Questions:</label>
+    <select id="wsCount"><option value="5">5</option><option value="10" selected>10</option><option value="15">15</option></select>
+    <button id="generateWs">Generate</button>
+    <button id="revealAll">Reveal all</button>
+    <button id="hideAll">Hide all</button>
+    <button id="printWs">Print</button>
+  </div>
+  <div class="note" style="text-align:left;margin-bottom:14px">Find the number of possible arrangements or outcomes.</div>
+  <div id="wsList" class="ws-list"></div>
+</section>
+
+<footer>Created by Mr. McLean Math</footer>
 </div>
 
 <script>
+const $=s=>document.querySelector(s);
+const $$=s=>Array.from(document.querySelectorAll(s));
+
 const regularBank = [
-  {
-    id: 'R1',
-    text: 'How many two-digit numbers can be formed using the digits 2, 4 and 6 if each digit can be used more than once?',
-    answer: 9,
-    answerText: '9',
-    explanation: 'There are 3 choices for the tens digit and 3 choices for the ones digit. So, 3 x 3 = 9.'
-  },
-  {
-    id: 'R2',
-    text: 'How many two-digit numbers can be formed using the digits 1, 3 and 5 if each digit can be used more than once?',
-    answer: 9,
-    answerText: '9',
-    explanation: 'There are 3 choices for the tens digit and 3 choices for the ones digit. So, 3 x 3 = 9.'
-  },
-  {
-    id: 'R3',
-    text: 'How many three-digit numbers can be formed using the digits 2, 4 and 6 if each digit can be used more than once?',
-    answer: 27,
-    answerText: '27',
-    explanation: 'There are 3 choices for each digit. So, 3 x 3 x 3 = 27.'
-  },
-  {
-    id: 'R4',
-    text: 'How many three-digit numbers can be formed using the digits 1, 3 and 5 if each digit can be used more than once?',
-    answer: 27,
-    answerText: '27',
-    explanation: 'There are 3 choices for each digit. So, 3 x 3 x 3 = 27.'
-  },
-  {
-    id: 'R5',
-    text: 'How many three-digit numbers can be formed using the digits 0, 2 and 7 if each digit can be used more than once?',
-    answer: 18,
-    answerText: '18',
-    explanation: 'The first digit cannot be 0, so there are 2 choices for the first digit. Then there are 3 choices for the second digit and 3 choices for the third digit. So, 2 x 3 x 3 = 18.'
-  },
-  {
-    id: 'R6',
-    text: 'How many four-digit numbers can be formed using the digits 1, 2 and 3 if each digit can be used more than once?',
-    answer: 81,
-    answerText: '81',
-    explanation: 'There are 3 choices for each of the 4 positions. So, 3 x 3 x 3 x 3 = 81.'
-  },
-  {
-    id: 'R7',
-    text: 'How many two-digit numbers can be formed using the digits 3, 5 and 8 if each digit can only be used once?',
-    answer: 6,
-    answerText: '6',
-    explanation: 'There are 3 choices for the tens digit. After one digit is used, there are 2 choices left for the ones digit. So, 3 x 2 = 6.'
-  },
-  {
-    id: 'R8',
-    text: 'How many two-digit numbers can be formed using the digits 1, 4 and 7 if each digit can only be used once?',
-    answer: 6,
-    answerText: '6',
-    explanation: 'There are 3 choices for the tens digit. After one digit is used, there are 2 choices left for the ones digit. So, 3 x 2 = 6.'
-  },
-  {
-    id: 'R9',
-    text: 'How many three-digit numbers can be formed using the digits 1, 2, 4 and 6 if all digits must be different?',
-    answer: 24,
-    answerText: '24',
-    explanation: 'There are 4 choices for the first digit, 3 choices for the second digit, and 2 choices for the third digit. So, 4 x 3 x 2 = 24.'
-  },
-  {
-    id: 'R10',
-    text: 'How many three-digit numbers can be formed using the digits 2, 3, 5 and 7 if all digits must be different?',
-    answer: 24,
-    answerText: '24',
-    explanation: 'There are 4 choices for the first digit, 3 choices for the second digit, and 2 choices for the third digit. So, 4 x 3 x 2 = 24.'
-  },
-  {
-    id: 'R11',
-    text: 'How many four-digit numbers can be formed using the digits 1, 3, 5 and 7 if all digits must be different?',
-    answer: 24,
-    answerText: '24',
-    explanation: 'There are 4 choices for the first digit, then 3, then 2, then 1. So, 4 x 3 x 2 x 1 = 24.'
-  },
-  {
-    id: 'R12',
-    text: 'How many four-digit numbers can be formed using the digits 2, 4, 6 and 8 if all digits must be different?',
-    answer: 24,
-    answerText: '24',
-    explanation: 'There are 4 choices for the first digit, then 3, then 2, then 1. So, 4 x 3 x 2 x 1 = 24.'
-  },
-  {
-    id: 'R13',
-    text: 'How many two-digit numbers can be formed using the digits 2, 3 and 7 if each digit can only be used once?',
-    answer: 6,
-    answerText: '6',
-    explanation: 'There are 3 choices for the tens digit and then 2 choices left for the ones digit. So, 3 x 2 = 6. The numbers are 23, 27, 32, 37, 72 and 73.'
-  },
-  {
-    id: 'R14',
-    text: 'How many two-digit numbers can be formed using the digits 1, 4 and 5 if each digit can only be used once?',
-    answer: 6,
-    answerText: '6',
-    explanation: 'There are 3 choices for the tens digit and then 2 choices left for the ones digit. So, 3 x 2 = 6. The numbers are 14, 15, 41, 45, 51 and 54.'
-  },
-  {
-    id: 'R15',
-    text: 'How many three-digit numbers can be formed using the digits 2, 4 and 6 if each digit can be used more than once?',
-    answer: 27,
-    answerText: '27',
-    explanation: 'There are 3 choices for each digit. So, 3 x 3 x 3 = 27.'
-  },
-  {
-    id: 'R16',
-    text: 'Three people are standing in a line. In how many ways can the line be arranged?',
-    answer: 6,
-    answerText: '6',
-    explanation: 'There are 3 choices for the first position, 2 choices for the second position, and 1 choice for the last position. So, 3 x 2 x 1 = 6.'
-  },
-  {
-    id: 'R17',
-    text: 'Four people are standing in a line. In how many ways can the line be arranged?',
-    answer: 24,
-    answerText: '24',
-    explanation: 'There are 4 choices for the first position, then 3, then 2, then 1. So, 4 x 3 x 2 x 1 = 24.'
-  },
-  {
-    id: 'R18',
-    text: 'Three books are placed on a shelf. In how many different ways can they be arranged?',
-    answer: 6,
-    answerText: '6',
-    explanation: 'There are 3 choices for the first position, 2 choices for the second position, and 1 choice for the last position. So, 3 x 2 x 1 = 6.'
-  },
-  {
-    id: 'R19',
-    text: 'Four books are placed on a shelf. In how many different ways can they be arranged?',
-    answer: 24,
-    answerText: '24',
-    explanation: 'There are 4 choices for the first position, then 3, then 2, then 1. So, 4 x 3 x 2 x 1 = 24.'
-  },
-  {
-    id: 'R20',
-    text: 'Using the letters A, B and C, how many three-letter arrangements can be formed if all letters must be different?',
-    answer: 6,
-    answerText: '6',
-    explanation: 'There are 3 choices for the first letter, 2 choices for the second letter, and 1 choice for the last letter. So, 3 x 2 x 1 = 6.'
-  },
-  {
-    id: 'R21',
-    text: 'Using the letters A, B and C, how many three-letter arrangements can be formed if letters can be repeated?',
-    answer: 27,
-    answerText: '27',
-    explanation: 'There are 3 choices for each letter position. Since letters can be repeated, the number of choices stays the same. So, 3 x 3 x 3 = 27.'
-  },
-  {
-    id: 'R22',
-    text: 'Using the letters A, B, C and D, how many four-letter arrangements can be formed if all letters must be different?',
-    answer: 24,
-    answerText: '24',
-    explanation: 'There are 4 choices for the first letter, then 3, then 2, then 1. So, 4 x 3 x 2 x 1 = 24.'
-  },
-  {
-    id: 'R23',
-    text: 'Using the letters A, B, C and D, how many four-letter arrangements can be formed if letters can be repeated?',
-    answer: 256,
-    answerText: '256',
-    explanation: 'There are 4 choices for each of the 4 positions. Since letters can be repeated, the number of choices stays the same. So, 4 x 4 x 4 x 4 = 256.'
-  },
-  {
-    id: 'R24',
-    text: 'You can choose between 3 shirts and 2 pairs of pants. In how many ways can you choose one shirt and one pair of pants?',
-    answer: 6,
-    answerText: '6',
-    explanation: 'For each shirt, there are 2 pants choices. There are 3 shirts. So, 3 x 2 = 6.'
-  },
-  {
-    id: 'R25',
-    text: 'You can choose between 4 hats and 3 jackets. In how many ways can you choose one hat and one jacket?',
-    answer: 12,
-    answerText: '12',
-    explanation: 'For each hat, there are 3 jacket choices. There are 4 hats. So, 4 x 3 = 12.'
-  }
+{
+id: 'R1',
+text: 'How many two-digit numbers can be formed using the digits 2, 4 and 6 if each digit can be used more than once?',
+answer: 9,
+answerText: '9',
+explanation: 'There are 3 choices for the tens digit and 3 choices for the ones digit. So, 3 x 3 = 9.'
+},
+{
+id: 'R2',
+text: 'How many two-digit numbers can be formed using the digits 1, 3 and 5 if each digit can be used more than once?',
+answer: 9,
+answerText: '9',
+explanation: 'There are 3 choices for the tens digit and 3 choices for the ones digit. So, 3 x 3 = 9.'
+},
+{
+id: 'R3',
+text: 'How many three-digit numbers can be formed using the digits 2, 4 and 6 if each digit can be used more than once?',
+answer: 27,
+answerText: '27',
+explanation: 'There are 3 choices for each digit. So, 3 x 3 x 3 = 27.'
+},
+{
+id: 'R4',
+text: 'How many three-digit numbers can be formed using the digits 1, 3 and 5 if each digit can be used more than once?',
+answer: 27,
+answerText: '27',
+explanation: 'There are 3 choices for each digit. So, 3 x 3 x 3 = 27.'
+},
+{
+id: 'R5',
+text: 'How many three-digit numbers can be formed using the digits 0, 2 and 7 if each digit can be used more than once?',
+answer: 18,
+answerText: '18',
+explanation: 'The first digit cannot be 0, so there are 2 choices for the first digit. Then there are 3 choices for the second digit and 3 choices for the third digit. So, 2 x 3 x 3 = 18.'
+},
+{
+id: 'R6',
+text: 'How many four-digit numbers can be formed using the digits 1, 2 and 3 if each digit can be used more than once?',
+answer: 81,
+answerText: '81',
+explanation: 'There are 3 choices for each of the 4 positions. So, 3 x 3 x 3 x 3 = 81.'
+},
+{
+id: 'R7',
+text: 'How many two-digit numbers can be formed using the digits 3, 5 and 8 if each digit can only be used once?',
+answer: 6,
+answerText: '6',
+explanation: 'There are 3 choices for the tens digit. After one digit is used, there are 2 choices left for the ones digit. So, 3 x 2 = 6.'
+},
+{
+id: 'R8',
+text: 'How many two-digit numbers can be formed using the digits 1, 4 and 7 if each digit can only be used once?',
+answer: 6,
+answerText: '6',
+explanation: 'There are 3 choices for the tens digit. After one digit is used, there are 2 choices left for the ones digit. So, 3 x 2 = 6.'
+},
+{
+id: 'R9',
+text: 'How many three-digit numbers can be formed using the digits 1, 2, 4 and 6 if all digits must be different?',
+answer: 24,
+answerText: '24',
+explanation: 'There are 4 choices for the first digit, 3 choices for the second digit, and 2 choices for the third digit. So, 4 x 3 x 2 = 24.'
+},
+{
+id: 'R10',
+text: 'How many three-digit numbers can be formed using the digits 2, 3, 5 and 7 if all digits must be different?',
+answer: 24,
+answerText: '24',
+explanation: 'There are 4 choices for the first digit, 3 choices for the second digit, and 2 choices for the third digit. So, 4 x 3 x 2 = 24.'
+},
+{
+id: 'R11',
+text: 'How many four-digit numbers can be formed using the digits 1, 3, 5 and 7 if all digits must be different?',
+answer: 24,
+answerText: '24',
+explanation: 'There are 4 choices for the first digit, then 3, then 2, then 1. So, 4 x 3 x 2 x 1 = 24.'
+},
+{
+id: 'R12',
+text: 'How many four-digit numbers can be formed using the digits 2, 4, 6 and 8 if all digits must be different?',
+answer: 24,
+answerText: '24',
+explanation: 'There are 4 choices for the first digit, then 3, then 2, then 1. So, 4 x 3 x 2 x 1 = 24.'
+},
+{
+id: 'R13',
+text: 'How many two-digit numbers can be formed using the digits 2, 3 and 7 if each digit can only be used once?',
+answer: 6,
+answerText: '6',
+explanation: 'There are 3 choices for the tens digit and then 2 choices left for the ones digit. So, 3 x 2 = 6. The numbers are 23, 27, 32, 37, 72 and 73.'
+},
+{
+id: 'R14',
+text: 'How many two-digit numbers can be formed using the digits 1, 4 and 5 if each digit can only be used once?',
+answer: 6,
+answerText: '6',
+explanation: 'There are 3 choices for the tens digit and then 2 choices left for the ones digit. So, 3 x 2 = 6. The numbers are 14, 15, 41, 45, 51 and 54.'
+},
+{
+id: 'R15',
+text: 'How many three-digit numbers can be formed using the digits 1, 2, 3 and 4 if each digit can be used more than once?',
+answer: 64,
+answerText: '64',
+explanation: 'There are 4 choices for each of the 3 positions. So, 4 x 4 x 4 = 64.'
+},
+{
+id: 'R16',
+text: 'Three people are standing in a line. In how many ways can the line be arranged?',
+answer: 6,
+answerText: '6',
+explanation: 'There are 3 choices for the first position, 2 choices for the second position, and 1 choice for the last position. So, 3 x 2 x 1 = 6.'
+},
+{
+id: 'R17',
+text: 'Four people are standing in a line. In how many ways can the line be arranged?',
+answer: 24,
+answerText: '24',
+explanation: 'There are 4 choices for the first position, then 3, then 2, then 1. So, 4 x 3 x 2 x 1 = 24.'
+},
+{
+id: 'R18',
+text: 'Three books are placed on a shelf. In how many different ways can they be arranged?',
+answer: 6,
+answerText: '6',
+explanation: 'There are 3 choices for the first position, 2 choices for the second position, and 1 choice for the last position. So, 3 x 2 x 1 = 6.'
+},
+{
+id: 'R19',
+text: 'Four books are placed on a shelf. In how many different ways can they be arranged?',
+answer: 24,
+answerText: '24',
+explanation: 'There are 4 choices for the first position, then 3, then 2, then 1. So, 4 x 3 x 2 x 1 = 24.'
+},
+{
+id: 'R20',
+text: 'Using the letters A, B and C, how many three-letter arrangements can be formed if all letters must be different?',
+answer: 6,
+answerText: '6',
+explanation: 'There are 3 choices for the first letter, 2 choices for the second letter, and 1 choice for the last letter. So, 3 x 2 x 1 = 6.'
+},
+{
+id: 'R21',
+text: 'Using the letters A, B and C, how many three-letter arrangements can be formed if letters can be repeated?',
+answer: 27,
+answerText: '27',
+explanation: 'There are 3 choices for each letter position. Since letters can be repeated, the number of choices stays the same. So, 3 x 3 x 3 = 27.'
+},
+{
+id: 'R22',
+text: 'Using the letters A, B, C and D, how many four-letter arrangements can be formed if all letters must be different?',
+answer: 24,
+answerText: '24',
+explanation: 'There are 4 choices for the first letter, then 3, then 2, then 1. So, 4 x 3 x 2 x 1 = 24.'
+},
+{
+id: 'R23',
+text: 'Using the letters A, B, C and D, how many four-letter arrangements can be formed if letters can be repeated?',
+answer: 256,
+answerText: '256',
+explanation: 'There are 4 choices for each of the 4 positions. Since letters can be repeated, the number of choices stays the same. So, 4 x 4 x 4 x 4 = 256.'
+},
+{
+id: 'R24',
+text: 'You can choose between 3 shirts and 2 pairs of pants. In how many ways can you choose one shirt and one pair of pants?',
+answer: 6,
+answerText: '6',
+explanation: 'For each shirt, there are 2 pants choices. There are 3 shirts. So, 3 x 2 = 6.'
+},
+{
+id: 'R25',
+text: 'You can choose between 4 hats and 3 jackets. In how many ways can you choose one hat and one jacket?',
+answer: 12,
+answerText: '12',
+explanation: 'For each hat, there are 3 jacket choices. There are 4 hats. So, 4 x 3 = 12.'
+}
 ];
 
 const advancedBank = [
-  {
-    id: 'A1',
-    text: 'How many two-digit even numbers can be formed using the digits 1, 2 and 4 if each digit can be used more than once?',
-    answer: 6,
-    answerText: '6',
-    explanation: 'The ones digit must be even, so it can be 2 or 4. That gives 2 choices for the ones digit. There are 3 choices for the tens digit. So, 3 x 2 = 6.'
-  },
-  {
-    id: 'A2',
-    text: 'How many two-digit odd numbers can be formed using the digits 1, 3 and 5 if each digit can be used more than once?',
-    answer: 9,
-    answerText: '9',
-    explanation: 'The ones digit must be odd. All three digits are odd, so there are 3 choices for the ones digit and 3 choices for the tens digit. So, 3 x 3 = 9.'
-  },
-  {
-    id: 'A3',
-    text: 'How many three-digit odd numbers can be formed using the digits 1, 3, 5 and 6 if all digits must be different?',
-    answer: 18,
-    answerText: '18',
-    explanation: 'The last digit must be odd, so there are 3 choices: 1, 3 or 5. After that, there are 3 choices left for the first digit and 2 choices left for the middle digit. So, 3 x 3 x 2 = 18.'
-  },
-  {
-    id: 'A4',
-    text: 'How many three-digit even numbers can be formed using the digits 2, 4 and 6 if all digits must be different and the number must start with 2?',
-    answer: 2,
-    answerText: '2',
-    explanation: 'The first digit is fixed as 2. The last digit must be even and different from 2, so it can be 4 or 6. After choosing the last digit, only 1 digit is left for the middle position. So, 1 x 2 x 1 = 2.'
-  },
-  {
-    id: 'A5',
-    text: 'How many three-digit odd numbers can be formed using the digits 1, 3 and 5 if all digits must be different and the number must be greater than 300?',
-    answer: 4,
-    answerText: '4',
-    explanation: 'The first digit must be 3 or 5, so there are 2 choices. After that, there are 2 choices left for the second digit and 1 choice left for the last digit. All possible numbers are odd because all three digits are odd. So, 2 x 2 x 1 = 4.'
-  },
-  {
-    id: 'A6',
-    text: 'How many four-digit numbers can be formed using the digits 1, 3, 5 and 7 if all digits must be different and the number must end with 5?',
-    answer: 6,
-    answerText: '6',
-    explanation: 'The last digit is fixed as 5. That leaves 3 digits to arrange in the first three positions. So, 3 x 2 x 1 = 6.'
-  },
-  {
-    id: 'A7',
-    text: 'How many two-digit numbers can be formed using the digits 1, 2 and 3 if each digit can be used more than once, but the numbers 11, 22 and 33 are not allowed?',
-    answer: 6,
-    answerText: '6',
-    explanation: 'If repetition is allowed, there are 3 x 3 = 9 two-digit numbers. But 11, 22 and 33 are not allowed, so subtract 3. That gives 9 - 3 = 6.'
-  },
-  {
-    id: 'A8',
-    text: 'How many three-digit numbers greater than 400 can be formed using the digits 2, 4 and 6 if all digits must be different?',
-    answer: 4,
-    answerText: '4',
-    explanation: 'The first digit must be 4 or 6, so there are 2 choices. After choosing the first digit, there are 2 choices left for the second digit and 1 choice left for the third digit. So, 2 x 2 x 1 = 4.'
-  },
-  {
-    id: 'A9',
-    text: 'How many even three-digit numbers can be formed using the digits 1, 2 and 3 if each digit can be used more than once?',
-    answer: 9,
-    answerText: '9',
-    explanation: 'The number must be even, so the last digit must be 2. The first digit has 3 choices and the middle digit has 3 choices. So, 3 x 3 x 1 = 9.'
-  },
-  {
-    id: 'A10',
-    text: 'How many two-digit odd numbers can be formed using the digits 2, 4 and 6 if each digit can only be used once?',
-    answer: 0,
-    answerText: '0',
-    explanation: 'A two-digit odd number must end in an odd digit. The digits 2, 4 and 6 are all even, so no odd number can be formed.'
-  },
-  {
-    id: 'A11',
-    text: 'Four people are standing in a line. In how many ways can the line be arranged if one specific person must stand first?',
-    answer: 6,
-    answerText: '6',
-    explanation: 'The first position is fixed. That leaves 3 people to arrange in the remaining positions. So, 3 x 2 x 1 = 6.'
-  },
-  {
-    id: 'A12',
-    text: 'Three people are standing in a line. In how many ways can the line be arranged if two specific people must stand next to each other?',
-    answer: 4,
-    answerText: '4',
-    explanation: 'Treat the two people who must stand together as one block. Then there are 2 items to arrange: the block and the third person. That gives 2 ways. The two people inside the block can also switch places, giving 2 more ways. So, 2 x 2 = 4.'
-  },
-  {
-    id: 'A13',
-    text: 'Using the letters A, B and C, how many three-letter arrangements can be formed if letters can be repeated, the arrangement must start with A, and the last two letters cannot be the same?',
-    answer: 6,
-    answerText: '6',
-    explanation: 'The first letter is fixed as A. The second letter has 3 choices. The third letter can be any letter except the second letter, so it has 2 choices. So, 1 x 3 x 2 = 6.'
-  },
-  {
-    id: 'A14',
-    text: 'Using the letters A, B, C and D, how many four-letter arrangements can be formed if all letters must be different and the arrangement must end with D?',
-    answer: 6,
-    answerText: '6',
-    explanation: 'The last letter is fixed as D. That leaves 3 letters to arrange in the first three positions. So, 3 x 2 x 1 = 6.'
-  },
-  {
-    id: 'A15',
-    text: 'A code consists of two letters, A or B, followed by three digits. How many different codes can be formed?',
-    answer: 4000,
-    answerText: '4000',
-    explanation: 'There are 2 choices for the first letter and 2 choices for the second letter. Each digit position has 10 choices, from 0 to 9. So, 2 x 2 x 10 x 10 x 10 = 4000.'
-  },
-  {
-    id: 'A16',
-    text: 'A code consists of one letter, A, B or C, followed by three digits. How many different codes can be formed if digits can be repeated?',
-    answer: 3000,
-    answerText: '3000',
-    explanation: 'There are 3 choices for the letter. Each digit position has 10 choices, from 0 to 9. So, 3 x 10 x 10 x 10 = 3000.'
-  },
-  {
-    id: 'A17',
-    text: 'A code consists of two letters, A, B or C, followed by two digits. How many different codes can be formed?',
-    answer: 900,
-    answerText: '900',
-    explanation: 'There are 3 choices for the first letter and 3 choices for the second letter. Each digit position has 10 choices, from 0 to 9. So, 3 x 3 x 10 x 10 = 900.'
-  }
+{
+id: 'A1',
+text: 'How many two-digit even numbers can be formed using the digits 1, 2 and 4 if each digit can be used more than once?',
+answer: 6,
+answerText: '6',
+explanation: 'The ones digit must be even, so it can be 2 or 4. That gives 2 choices for the ones digit. There are 3 choices for the tens digit. So, 3 x 2 = 6.'
+},
+{
+id: 'A2',
+text: 'How many two-digit odd numbers can be formed using the digits 1, 3 and 5 if each digit can be used more than once?',
+answer: 9,
+answerText: '9',
+explanation: 'The ones digit must be odd. All three digits are odd, so there are 3 choices for the ones digit and 3 choices for the tens digit. So, 3 x 3 = 9.'
+},
+{
+id: 'A3',
+text: 'How many three-digit odd numbers can be formed using the digits 1, 3, 5 and 6 if all digits must be different?',
+answer: 18,
+answerText: '18',
+explanation: 'The last digit must be odd, so there are 3 choices: 1, 3 or 5. After that, there are 3 choices left for the first digit and 2 choices left for the middle digit. So, 3 x 3 x 2 = 18.'
+},
+{
+id: 'A4',
+text: 'How many three-digit even numbers can be formed using the digits 2, 4 and 6 if all digits must be different and the number must start with 2?',
+answer: 2,
+answerText: '2',
+explanation: 'The first digit is fixed as 2. The last digit must be even and different from 2, so it can be 4 or 6. After choosing the last digit, only 1 digit is left for the middle position. So, 1 x 2 x 1 = 2.'
+},
+{
+id: 'A5',
+text: 'How many three-digit odd numbers can be formed using the digits 1, 3 and 5 if all digits must be different and the number must be greater than 300?',
+answer: 4,
+answerText: '4',
+explanation: 'The first digit must be 3 or 5, so there are 2 choices. After that, there are 2 choices left for the second digit and 1 choice left for the last digit. All possible numbers are odd because all three digits are odd. So, 2 x 2 x 1 = 4.'
+},
+{
+id: 'A6',
+text: 'How many four-digit numbers can be formed using the digits 1, 3, 5 and 7 if all digits must be different and the number must end with 5?',
+answer: 6,
+answerText: '6',
+explanation: 'The last digit is fixed as 5. That leaves 3 digits to arrange in the first three positions. So, 3 x 2 x 1 = 6.'
+},
+{
+id: 'A7',
+text: 'How many two-digit numbers can be formed using the digits 1, 2 and 3 if each digit can be used more than once, but the numbers 11, 22 and 33 are not allowed?',
+answer: 6,
+answerText: '6',
+explanation: 'If repetition is allowed, there are 3 x 3 = 9 two-digit numbers. But 11, 22 and 33 are not allowed, so subtract 3. That gives 9 - 3 = 6.'
+},
+{
+id: 'A8',
+text: 'How many three-digit numbers greater than 400 can be formed using the digits 2, 4 and 6 if all digits must be different?',
+answer: 4,
+answerText: '4',
+explanation: 'The first digit must be 4 or 6, so there are 2 choices. After choosing the first digit, there are 2 choices left for the second digit and 1 choice left for the third digit. So, 2 x 2 x 1 = 4.'
+},
+{
+id: 'A9',
+text: 'How many even three-digit numbers can be formed using the digits 1, 2 and 3 if each digit can be used more than once?',
+answer: 9,
+answerText: '9',
+explanation: 'The number must be even, so the last digit must be 2. The first digit has 3 choices and the middle digit has 3 choices. So, 3 x 3 x 1 = 9.'
+},
+{
+id: 'A10',
+text: 'How many two-digit odd numbers can be formed using the digits 2, 4 and 6 if each digit can only be used once?',
+answer: 0,
+answerText: '0',
+explanation: 'A two-digit odd number must end in an odd digit. The digits 2, 4 and 6 are all even, so no odd number can be formed.'
+},
+{
+id: 'A11',
+text: 'Four people are standing in a line. In how many ways can the line be arranged if one specific person must stand first?',
+answer: 6,
+answerText: '6',
+explanation: 'The first position is fixed. That leaves 3 people to arrange in the remaining positions. So, 3 x 2 x 1 = 6.'
+},
+{
+id: 'A12',
+text: 'Three people are standing in a line. In how many ways can the line be arranged if two specific people must stand next to each other?',
+answer: 4,
+answerText: '4',
+explanation: 'Treat the two people who must stand together as one block. Then there are 2 items to arrange: the block and the third person. That gives 2 ways. The two people inside the block can also switch places, giving 2 more ways. So, 2 x 2 = 4.'
+},
+{
+id: 'A13',
+text: 'Using the letters A, B and C, how many three-letter arrangements can be formed if letters can be repeated, the arrangement must start with A, and the last two letters cannot be the same?',
+answer: 6,
+answerText: '6',
+explanation: 'The first letter is fixed as A. The second letter has 3 choices. The third letter can be any letter except the second letter, so it has 2 choices. So, 1 x 3 x 2 = 6.'
+},
+{
+id: 'A14',
+text: 'Using the letters A, B, C and D, how many four-letter arrangements can be formed if all letters must be different and the arrangement must end with D?',
+answer: 6,
+answerText: '6',
+explanation: 'The last letter is fixed as D. That leaves 3 letters to arrange in the first three positions. So, 3 x 2 x 1 = 6.'
+},
+{
+id: 'A15',
+text: 'A code consists of two letters, A or B, followed by three digits. How many different codes can be formed?',
+answer: 4000,
+answerText: '4000',
+explanation: 'There are 2 choices for the first letter and 2 choices for the second letter. Each digit position has 10 choices, from 0 to 9. So, 2 x 2 x 10 x 10 x 10 = 4000.'
+},
+{
+id: 'A16',
+text: 'A code consists of one letter, A, B or C, followed by three digits. How many different codes can be formed if digits can be repeated?',
+answer: 3000,
+answerText: '3000',
+explanation: 'There are 3 choices for the letter. Each digit position has 10 choices, from 0 to 9. So, 3 x 10 x 10 x 10 = 3000.'
+},
+{
+id: 'A17',
+text: 'A code consists of two letters, A, B or C, followed by two digits. How many different codes can be formed?',
+answer: 900,
+answerText: '900',
+explanation: 'There are 3 choices for the first letter and 3 choices for the second letter. Each digit position has 10 choices, from 0 to 9. So, 3 x 3 x 10 x 10 = 900.'
+}
 ];
 
-const state = {
-  currentMode: 'regular',
-  currentView: 'game',
-  currentQuestion: null,
-  questionNumber: 0,
-  score: 0,
-  correct: 0,
-  awaitingNext: false,
-  timerSeconds: 0,
-  timerLeft: 0,
-  timerId: null,
-  regularPool: [],
-  advancedPool: [],
-  worksheetItems: [],
-  previousWorksheetIds: [],
-  lastQuestionId: null
+
+
+const state={
+  view:"practice",
+  mode:"regular",
+  current:null,
+  evaluated:false,
+  correct:0,
+  incorrect:0,
+  regularPool:[],
+  advancedPool:[],
+  worksheetPrevious:{regular:[],advanced:[]},
+  lastQuestionId:null
 };
 
-const els = {
-  viewMode: document.getElementById('viewMode'),
-  difficultyMode: document.getElementById('difficultyMode'),
-  timerMode: document.getElementById('timerMode'),
-  worksheetCount: document.getElementById('worksheetCount'),
-  worksheetCountWrap: document.getElementById('worksheetCountWrap'),
-  soundToggle: document.getElementById('soundToggle'),
-  contrastToggle: document.getElementById('contrastToggle'),
-  startBtn: document.getElementById('startBtn'),
-  newQuestionBtn: document.getElementById('newQuestionBtn'),
-  buildWorksheetBtn: document.getElementById('buildWorksheetBtn'),
-  scoreValue: document.getElementById('scoreValue'),
-  correctValue: document.getElementById('correctValue'),
-  questionValue: document.getElementById('questionValue'),
-  timerValue: document.getElementById('timerValue'),
-  modeSummary: document.getElementById('modeSummary'),
-  gamePanel: document.getElementById('gamePanel'),
-  worksheetPanel: document.getElementById('worksheetPanel'),
-  progressLine: document.getElementById('progressLine'),
-  questionText: document.getElementById('questionText'),
-  finalAnswerInput: document.getElementById('finalAnswerInput'),
-  checkFinalBtn: document.getElementById('checkFinalBtn'),
-  nextBtn: document.getElementById('nextBtn'),
-  feedback: document.getElementById('feedback'),
-  worksheetList: document.getElementById('worksheetList'),
-  revealAllBtn: document.getElementById('revealAllBtn'),
-  hideAllBtn: document.getElementById('hideAllBtn')
-};
-
-function shuffle(array) {
-  const arr = [...array];
-
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    const temp = arr[i];
-    arr[i] = arr[j];
-    arr[j] = temp;
+function shuffle(array){
+  const arr=array.slice();
+  for(let i=arr.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]]=[arr[j],arr[i]];
   }
-
   return arr;
 }
 
-function resetPools() {
-  state.regularPool = shuffle(regularBank);
-  state.advancedPool = shuffle(advancedBank);
-  state.lastQuestionId = null;
+function bankFor(mode){return mode==="regular"?regularBank:advancedBank}
+
+function refillPool(mode){
+  const poolName=mode==="regular"?"regularPool":"advancedPool";
+  let fresh=shuffle(bankFor(mode));
+  if(fresh.length>1&&state.lastQuestionId&&fresh[fresh.length-1].id===state.lastQuestionId){
+    [fresh[fresh.length-1],fresh[0]]=[fresh[0],fresh[fresh.length-1]];
+  }
+  state[poolName]=fresh;
 }
 
-function getNextQuestion(mode) {
-  const poolName = mode === 'regular' ? 'regularPool' : 'advancedPool';
-  const bank = mode === 'regular' ? regularBank : advancedBank;
-
-  if (state[poolName].length === 0) {
-    state[poolName] = shuffle(bank);
-  }
-
-  // Avoid showing the exact same question twice in a row when a pool resets.
-  if (state[poolName].length > 1 && state.lastQuestionId) {
-    const lastIndex = state[poolName].findIndex(q => q.id === state.lastQuestionId);
-    if (lastIndex === state[poolName].length - 1) {
-      const swapIndex = Math.floor(Math.random() * (state[poolName].length - 1));
-      const temp = state[poolName][lastIndex];
-      state[poolName][lastIndex] = state[poolName][swapIndex];
-      state[poolName][swapIndex] = temp;
-    }
-  }
-
-  const q = state[poolName].pop();
-  state.lastQuestionId = q.id;
+function getNextQuestion(){
+  const poolName=state.mode==="regular"?"regularPool":"advancedPool";
+  if(!state[poolName].length)refillPool(state.mode);
+  const q=state[poolName].pop();
+  state.lastQuestionId=q.id;
   return q;
 }
 
-function updateStats() {
-  els.scoreValue.textContent = String(state.score);
-  els.correctValue.textContent = String(state.correct);
-  els.questionValue.textContent = String(state.questionNumber);
-  els.timerValue.textContent = state.timerSeconds > 0 ? String(state.timerLeft) : '--';
+function strictWholeNumber(raw){
+  const s=String(raw??"").trim().replace(/\s+/g,"");
+  if(!s)return null;
+  if(!/^\d+$/.test(s))return null;
+  const n=Number(s);
+  return Number.isSafeInteger(n)?n:null;
 }
 
-function updateModeSummary() {
-  if (state.currentMode === 'regular') {
-    els.modeSummary.textContent = 'Regular Mode: direct counting questions.';
-  } else {
-    els.modeSummary.textContent = 'Advanced Mode: counting questions with extra conditions.';
+function newQuestion(){
+  state.current=getNextQuestion();
+  state.evaluated=false;
+  $("#question").textContent=state.current.text;
+  $("#answer").value="";$("#answer").disabled=false;$("#check").disabled=false;$("#next").hidden=true;
+  $("#feedback").textContent="";$("#feedback").className="feedback";
+  $("#showSolution").hidden=true;$("#solution").hidden=true;$("#solution").textContent="";
+  $("#answer").focus();
+}
+
+function checkAnswer(){
+  if(state.evaluated||!state.current)return;
+  const raw=$("#answer").value.trim();
+  if(!raw){
+    $("#feedback").textContent="Enter an answer first.";
+    $("#feedback").className="feedback warn";
+    return;
   }
-}
-
-function clearFeedback() {
-  els.feedback.textContent = '';
-  els.feedback.className = 'feedback';
-}
-
-function setFeedback(message, type) {
-  els.feedback.innerHTML = message;
-  els.feedback.className = 'feedback ' + type;
-}
-
-function playTone(type) {
-  if (!els.soundToggle.checked) return;
-
-  const AudioCtx = window.AudioContext || window.webkitAudioContext;
-  if (!AudioCtx) return;
-
-  const ctx = new AudioCtx();
-  const osc = ctx.createOscillator();
-  const gain = ctx.createGain();
-
-  osc.connect(gain);
-  gain.connect(ctx.destination);
-
-  osc.type = 'sine';
-  osc.frequency.value = type === 'good' ? 660 : 220;
-
-  gain.gain.setValueAtTime(0.001, ctx.currentTime);
-  gain.gain.exponentialRampToValueAtTime(0.12, ctx.currentTime + 0.01);
-  gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.25);
-
-  osc.start();
-  osc.stop(ctx.currentTime + 0.26);
-}
-
-function startTimer() {
-  stopTimer();
-
-  state.timerSeconds = Number(els.timerMode.value);
-  state.timerLeft = state.timerSeconds;
-
-  updateStats();
-
-  if (state.timerSeconds <= 0) return;
-
-  state.timerId = setInterval(() => {
-    state.timerLeft -= 1;
-    updateStats();
-
-    if (state.timerLeft <= 0) {
-      stopTimer();
-
-      if (!state.awaitingNext && state.currentQuestion) {
-        finalizeIncorrect('Time is up.');
-      }
-    }
-  }, 1000);
-}
-
-function stopTimer() {
-  if (state.timerId) {
-    clearInterval(state.timerId);
-    state.timerId = null;
-  }
-}
-
-function getSolutionFeedback(q) {
-  return '<div>Incorrect. The correct answer is: ' + q.answerText + '</div>' +
-         '<div style="margin-top:8px;"><strong>How to solve it:</strong> ' + q.explanation + '</div>';
-}
-
-function setupQuestion() {
-  state.currentQuestion = getNextQuestion(state.currentMode);
-  state.questionNumber += 1;
-  state.awaitingNext = false;
-
-  clearFeedback();
-
-  els.questionText.textContent = state.currentQuestion.text;
-  els.progressLine.textContent = 'Question ' + state.questionNumber;
-  els.nextBtn.classList.add('hidden');
-  els.finalAnswerInput.value = '';
-
-  updateStats();
-  startTimer();
-
-  setTimeout(() => {
-    els.finalAnswerInput.focus();
-  }, 50);
-}
-
-function startNewGame() {
-  state.currentMode = els.difficultyMode.value;
-  state.currentView = 'game';
-
-  els.viewMode.value = 'game';
-
-  state.score = 0;
-  state.correct = 0;
-  state.questionNumber = 0;
-
-  resetPools();
-  updateModeSummary();
-  showView();
-  setupQuestion();
-}
-
-function showView() {
-  const game = els.viewMode.value === 'game';
-
-  state.currentView = els.viewMode.value;
-
-  els.gamePanel.classList.toggle('hidden', !game);
-  els.worksheetPanel.classList.toggle('hidden', game);
-  els.worksheetCountWrap.classList.toggle('hidden', game);
-}
-
-function handleFinalCheck() {
-  if (state.awaitingNext || !state.currentQuestion) return;
-
-  const raw = els.finalAnswerInput.value.trim();
-
-  if (raw === '') {
-    setFeedback('Enter an answer before checking.', 'warn');
+  const value=strictWholeNumber(raw);
+  if(value===null){
+    $("#feedback").textContent="Enter a whole number using digits only.";
+    $("#feedback").className="feedback warn";
     return;
   }
 
-  if (!/^\d+$/.test(raw)) {
-    setFeedback('Enter a whole number using digits only.', 'warn');
-    return;
+  state.evaluated=true;
+  $("#answer").disabled=true;$("#check").disabled=true;$("#next").hidden=false;
+
+  if(value===state.current.answer){
+    state.correct++;
+    $("#feedback").textContent="Correct!";
+    $("#feedback").className="feedback correct";
+  }else{
+    state.incorrect++;
+    $("#feedback").textContent=`Incorrect. Correct answer: ${state.current.answerText}`;
+    $("#feedback").className="feedback incorrect";
+    $("#showSolution").hidden=false;
   }
-
-  const val = Number(raw);
-
-  if (!Number.isSafeInteger(val)) {
-    setFeedback('That number is too large for this app to check safely.', 'warn');
-    return;
-  }
-
-  if (val === state.currentQuestion.answer) {
-    state.score += 1;
-    state.correct += 1;
-
-    playTone('good');
-    stopTimer();
-
-    state.awaitingNext = true;
-
-    setFeedback('Correct!', 'good');
-    els.nextBtn.classList.remove('hidden');
-
-    updateStats();
-  } else {
-    playTone('bad');
-    finalizeIncorrect(getSolutionFeedback(state.currentQuestion));
-  }
+  $("#correctCount").textContent=state.correct;
+  $("#incorrectCount").textContent=state.incorrect;
 }
 
-function finalizeIncorrect(message) {
-  stopTimer();
+$("#check").addEventListener("click",checkAnswer);
+$("#next").addEventListener("click",newQuestion);
+$("#showSolution").addEventListener("click",()=>{
+  $("#solution").textContent=state.current.explanation;
+  $("#solution").hidden=false;$("#showSolution").hidden=true;
+});
+$("#answer").addEventListener("keydown",e=>{
+  if(e.key==="Enter"){e.preventDefault();state.evaluated?newQuestion():checkAnswer()}
+  else if(e.key==="Escape"&&!state.evaluated)$("#answer").value="";
+});
 
-  state.awaitingNext = true;
+$("#mathModes").addEventListener("click",e=>{
+  const b=e.target.closest("button[data-mode]");if(!b)return;
+  state.mode=b.dataset.mode;
+  state.lastQuestionId=null;
+  $$("#mathModes button").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));
+  refillPool(state.mode);
+  if(state.view==="practice")newQuestion();
+});
 
-  if (message === 'Time is up.') {
-    setFeedback('Time is up.<br>' + getSolutionFeedback(state.currentQuestion), 'bad');
-  } else {
-    setFeedback(message, 'bad');
-  }
+$("#contrastBtn").addEventListener("click",()=>{
+  const on=document.body.classList.toggle("high-contrast");
+  $("#contrastBtn").setAttribute("aria-pressed",String(on));
+});
 
-  els.nextBtn.classList.remove('hidden');
-
-  updateStats();
+function setView(view){
+  state.view=view;const practice=view==="practice";
+  $("#practice").style.display=practice?"grid":"none";
+  $("#worksheet").style.display=practice?"none":"block";
+  $("#practiceBtn").setAttribute("aria-pressed",String(practice));
+  $("#worksheetBtn").setAttribute("aria-pressed",String(!practice));
+  if(practice)newQuestion();else if(!$("#wsList").children.length)renderWorksheet();
 }
+$("#practiceBtn").addEventListener("click",()=>setView("practice"));
+$("#worksheetBtn").addEventListener("click",()=>setView("worksheet"));
 
-function nextQuestion() {
-  setupQuestion();
-}
-
-function uniqueWorksheetQuestions(mode, count) {
-  const bank = mode === 'regular' ? regularBank : advancedBank;
-  const amount = Math.min(count, bank.length);
-  const previous = new Set(state.previousWorksheetIds || []);
-  const fresh = shuffle(bank.filter(q => !previous.has(q.id)));
-  const recycled = shuffle(bank.filter(q => previous.has(q.id)));
-  const selected = [...fresh, ...recycled].slice(0, amount);
-
-  state.previousWorksheetIds = selected.map(q => q.id);
+function uniqueWorksheetQuestions(mode,count){
+  const bank=bankFor(mode);
+  const amount=Math.min(count,bank.length);
+  const previous=new Set(state.worksheetPrevious[mode]||[]);
+  const fresh=shuffle(bank.filter(q=>!previous.has(q.id)));
+  const recycled=shuffle(bank.filter(q=>previous.has(q.id)));
+  const selected=[...fresh,...recycled].slice(0,amount);
+  state.worksheetPrevious[mode]=selected.map(q=>q.id);
   return selected;
 }
 
-function buildWorksheet() {
-  state.currentMode = els.difficultyMode.value;
-  state.currentView = 'worksheet';
+function renderWorksheet(){
+  const list=$("#wsList");list.innerHTML="";
+  const count=Number($("#wsCount").value)||10;
+  const questions=uniqueWorksheetQuestions(state.mode,count);
 
-  els.viewMode.value = 'worksheet';
-
-  updateModeSummary();
-  showView();
-  stopTimer();
-
-  const count = Number(els.worksheetCount.value);
-
-  state.worksheetItems = uniqueWorksheetQuestions(state.currentMode, count);
-  els.worksheetList.innerHTML = '';
-
-  state.worksheetItems.forEach((q, index) => {
-    const item = document.createElement('div');
-    item.className = 'worksheet-item';
-
-    const title = document.createElement('div');
-    title.style.fontWeight = '700';
-    title.style.marginBottom = '10px';
-    title.textContent = (index + 1) + '. ' + q.text;
-
-    const btnRow = document.createElement('div');
-    btnRow.style.marginTop = '12px';
-    btnRow.style.display = 'flex';
-    btnRow.style.gap = '10px';
-    btnRow.style.flexWrap = 'wrap';
-
-    const revealBtn = document.createElement('button');
-    revealBtn.type = 'button';
-    revealBtn.className = 'secondary';
-    revealBtn.textContent = 'Reveal Answer';
-
-    const answer = document.createElement('div');
-    answer.className = 'worksheet-answer hidden';
-    answer.innerHTML = '<strong>Answer:</strong> ' + q.answerText +
-      '<br><br><strong>How to solve it:</strong> ' + q.explanation;
-
-    revealBtn.addEventListener('click', () => {
-      answer.classList.toggle('hidden');
-      revealBtn.textContent = answer.classList.contains('hidden') ? 'Reveal Answer' : 'Hide Answer';
+  questions.forEach((q,i)=>{
+    const item=document.createElement("div");item.className="ws-item";
+    item.innerHTML=`<div class="ws-q"><strong>${i+1}.</strong> ${q.text}</div>
+      <div style="margin-top:8px">Answer: ______________________________</div>
+      <button class="ws-reveal" aria-expanded="false">Reveal</button>
+      <div class="ws-answer">Answer: ${q.answerText}</div>
+      <div class="ws-work">${q.explanation}</div>`;
+    const b=item.querySelector(".ws-reveal"),a=item.querySelector(".ws-answer"),w=item.querySelector(".ws-work");
+    b.addEventListener("click",()=>{
+      const showing=a.style.display==="block";
+      a.style.display=showing?"none":"block";w.style.display=showing?"none":"block";
+      b.textContent=showing?"Reveal":"Hide";b.setAttribute("aria-expanded",String(!showing));
     });
-
-    btnRow.appendChild(revealBtn);
-
-    item.appendChild(title);
-    item.appendChild(btnRow);
-    item.appendChild(answer);
-
-    els.worksheetList.appendChild(item);
+    list.appendChild(item);
   });
 }
 
-function revealAll(show) {
-  const answers = els.worksheetList.querySelectorAll('.worksheet-answer');
-  const buttons = els.worksheetList.querySelectorAll('.worksheet-item button');
+$("#generateWs").addEventListener("click",renderWorksheet);
+$("#revealAll").addEventListener("click",()=>{
+  $$("#wsList .ws-answer,#wsList .ws-work").forEach(x=>x.style.display="block");
+  $$("#wsList .ws-reveal").forEach(b=>{b.textContent="Hide";b.setAttribute("aria-expanded","true")});
+});
+$("#hideAll").addEventListener("click",()=>{
+  $$("#wsList .ws-answer,#wsList .ws-work").forEach(x=>x.style.display="none");
+  $$("#wsList .ws-reveal").forEach(b=>{b.textContent="Reveal";b.setAttribute("aria-expanded","false")});
+});
+$("#printWs").addEventListener("click",()=>window.print());
 
-  answers.forEach(el => el.classList.toggle('hidden', !show));
-  buttons.forEach(btn => btn.textContent = show ? 'Hide Answer' : 'Reveal Answer');
-}
-
-els.startBtn.addEventListener('click', startNewGame);
-
-els.newQuestionBtn.addEventListener('click', () => {
-  if (els.viewMode.value !== 'game') {
-    els.viewMode.value = 'game';
-    showView();
+function validateQuestionBank(){
+  const all=[...regularBank,...advancedBank];
+  const ids=new Set(),texts=new Set(),problems=[];
+  for(const q of all){
+    if(ids.has(q.id))problems.push("Duplicate ID: "+q.id);ids.add(q.id);
+    if(texts.has(q.text))problems.push("Duplicate question text: "+q.id);texts.add(q.text);
+    if(!Number.isSafeInteger(q.answer)||q.answer<0)problems.push("Invalid answer: "+q.id);
+    if(String(q.answer)!==String(q.answerText).replace(/\s/g,""))problems.push("Answer text mismatch: "+q.id);
+    if(!q.explanation||q.explanation.length<10)problems.push("Missing explanation: "+q.id);
   }
-
-  state.currentMode = els.difficultyMode.value;
-
-  updateModeSummary();
-  setupQuestion();
-});
-
-els.buildWorksheetBtn.addEventListener('click', buildWorksheet);
-
-els.viewMode.addEventListener('change', () => {
-  showView();
-  if (els.viewMode.value === 'worksheet') {
-    stopTimer();
-  }
-});
-
-els.difficultyMode.addEventListener('change', () => {
-  state.currentMode = els.difficultyMode.value;
-  resetPools();
-  updateModeSummary();
-});
-
-els.contrastToggle.addEventListener('change', () => {
-  document.body.classList.toggle('high-contrast', els.contrastToggle.checked);
-});
-
-els.checkFinalBtn.addEventListener('click', handleFinalCheck);
-
-els.nextBtn.addEventListener('click', nextQuestion);
-
-els.revealAllBtn.addEventListener('click', () => revealAll(true));
-
-els.hideAllBtn.addEventListener('click', () => revealAll(false));
-
-els.finalAnswerInput.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') {
-    e.preventDefault();
-
-    if (state.awaitingNext) {
-      nextQuestion();
-    } else {
-      handleFinalCheck();
-    }
-  }
-});
-
-document.addEventListener('keydown', (e) => {
-  if (
-    e.key === 'Enter' &&
-    state.awaitingNext &&
-    els.viewMode.value === 'game' &&
-    document.activeElement !== els.finalAnswerInput
-  ) {
-    e.preventDefault();
-    nextQuestion();
-  }
-});
-
-function validateQuestionBank() {
-  const allQuestions = [...regularBank, ...advancedBank];
-  const seen = new Set();
-  const problems = [];
-
-  allQuestions.forEach(q => {
-    if (seen.has(q.id)) problems.push('Duplicate id: ' + q.id);
-    seen.add(q.id);
-    if (!Number.isSafeInteger(q.answer) || q.answer < 0) problems.push('Invalid answer for ' + q.id);
-    if (String(q.answer) !== q.answerText.replace(/\s/g, '')) problems.push('Answer text mismatch for ' + q.id);
-    if (/correct answer should be/i.test(q.explanation)) problems.push('Leftover correction note in ' + q.id);
-  });
-
-  if (problems.length) {
-    console.warn('Question bank QA issues:', problems);
-  }
+  console.log(problems.length?"BANK QA: FAIL":"BANK QA: PASS",problems);
 }
 
 validateQuestionBank();
-resetPools();
-showView();
-updateModeSummary();
-updateStats();
+refillPool("regular");refillPool("advanced");
+newQuestion();
 </script>
 </body>
 </html>
